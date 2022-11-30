@@ -34,6 +34,7 @@ const App = () => {
   const [linePercentage, setLinePercenteage] = useState(0);
   const [curvePercentage, setCurvePercentage] = useState(0);
   const [challengeFinished, setChallengeFinished] = useState(false);
+  const [youWon, setYouWon] = useState(false);
 
   const dragon = <Dragon />
   const curve = <Curve />
@@ -53,14 +54,18 @@ const App = () => {
     const curveElement = document.getElementById("curve");
     const dragonElement = document.getElementById("dragon");
 
-    if (linePercentage >= 100 || curvePercentage > 100) {
+    if (linePercentage >= 100 || curvePercentage >= 100) {
+      if (linePercentage >= curvePercentage) {
+        setYouWon(true);
+      }
       setCurvePercentage(0);
       setLinePercenteage(0);
       setChallengeFinished(true);
     } else {
-      setCurvePercentage(curvePercentage + getRandomInt(3) + 1);
-      setLinePercenteage(linePercentage + getRandomInt(3) + 1);
+      setCurvePercentage(curvePercentage + getRandomInt(2) + 1);
+      setLinePercenteage(linePercentage + getRandomInt(2) + 1);
       setChallengeFinished(false);
+      setYouWon(false)
     }
     const p = lineElement.getPointAtLength(linePercentage / 100 * lineElement.getTotalLength());
     femaleRunnerElement.setAttribute("transform", `translate(${p.x - 5}, ${p.y - 16})`)
@@ -73,7 +78,9 @@ const App = () => {
     <Container>
       <Row>
         <h1>
-          Race the dragon!
+          {!challengeFinished && 'Race the dragon!'}
+          {challengeFinished && youWon && 'You beat the dragon - the treasure is yours!'}
+          {challengeFinished && !youWon && 'The dragon beat you and the treasure is gone...'}
         </h1>
       </Row>
       <Row>
